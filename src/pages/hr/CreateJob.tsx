@@ -9,7 +9,8 @@ import {
   Loader2, 
   Save, 
   Sparkles, 
-  ArrowLeft 
+  ArrowLeft,
+  Wand2 
 } from 'lucide-react';
 
 const CreateJob: React.FC = () => {
@@ -52,6 +53,7 @@ const CreateJob: React.FC = () => {
       if(!aiPrompt.trim()) return;
       setGenerating(true);
       try {
+          // Placeholder for AI Generation Endpoint
           const res = await api.post('/jobs/generate', { prompt: aiPrompt });
           const data = res.data;
           
@@ -64,7 +66,7 @@ const CreateJob: React.FC = () => {
           });
       } catch (err) {
           console.error("AI Gen Failed", err);
-          alert("Failed to generate job description");
+          alert("Failed to generate job description. Please ensure your backend supports this feature.");
       } finally {
           setGenerating(false);
       }
@@ -87,7 +89,7 @@ const CreateJob: React.FC = () => {
       navigate('/hr/jobs');
     } catch (error) {
       console.error("Failed to save job", error);
-      alert("Failed to save job");
+      alert("Failed to save job details.");
     } finally {
       setLoading(false);
     }
@@ -99,92 +101,101 @@ const CreateJob: React.FC = () => {
 
   if (loading && isEditing && !formData.title) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <Loader2 className="w-10 h-10 animate-spin text-violet-600" />
+        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+          <Loader2 className="w-10 h-10 animate-spin text-[#5F1DD6]" />
         </div>
       );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-5xl mx-auto space-y-8">
         
-        {/* Header Section */}
+        {/* --- Header Section --- */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <button 
               onClick={() => navigate('/hr/jobs')} 
-              className="flex items-center text-sm text-gray-500 hover:text-gray-900 transition mb-2 group"
+              className="group flex items-center text-sm font-bold text-slate-500 hover:text-[#5F1DD6] transition-colors mb-2"
             >
               <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-              Back to Jobs
+              Back to Listings
             </button>
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               {isEditing ? 'Edit Job Posting' : 'Create New Opportunity'}
             </h1>
-            <p className="text-gray-500 mt-1 text-lg">
-              {isEditing ? 'Refine the details below.' : 'Find your next star employee.'}
+            <p className="text-slate-500 mt-1 font-medium">
+              {isEditing ? 'Update the role details below.' : 'Define the requirements for your next hire.'}
             </p>
           </div>
         </div>
 
-        {/* AI Generator Card */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 rounded-3xl p-1 shadow-xl shadow-indigo-200/50">
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-3xl"></div>
+        {/* --- AI Generator Card --- */}
+        <div className="relative overflow-hidden rounded-3xl p-[1px] shadow-2xl shadow-[#5F1DD6]/20 group">
+            {/* Animated Border Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#5F1DD6] via-purple-500 to-[#5F1DD6] opacity-30 group-hover:opacity-50 transition-opacity duration-1000"></div>
             
-            <div className="relative bg-white/10 backdrop-blur-md rounded-[20px] p-6 sm:p-8">
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                    <div className="p-4 bg-white/20 rounded-2xl shadow-inner backdrop-blur-sm shrink-0">
-                        <Sparkles className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                        <h3 className="text-xl font-bold text-white">AI Assistant</h3>
-                        <p className="text-indigo-100/90 text-sm leading-relaxed max-w-xl">
-                           Don't want to type? Just describe the role (e.g., "Senior React Dev, $140k, Remote") and let our AI draft the entire listing for you.
-                        </p>
-                    </div>
-                </div>
+            <div className="relative bg-[#0F172A] rounded-[23px] overflow-hidden">
+                {/* Background Blobs */}
+                <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-[#5F1DD6] opacity-20 rounded-full blur-[80px]"></div>
+                <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-indigo-500 opacity-20 rounded-full blur-[80px]"></div>
 
-                <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                    <input 
-                       type="text" 
-                       placeholder="Describe the role here..." 
-                       className="flex-1 px-5 py-3.5 rounded-xl bg-white/95 border-0 text-gray-800 placeholder-gray-400 focus:ring-4 focus:ring-white/30 focus:outline-none shadow-lg transition-all"
-                       value={aiPrompt}
-                       onChange={(e) => setAiPrompt(e.target.value)}
-                       onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-                    />
-                    <button 
-                      type="button"
-                      onClick={handleGenerate} 
-                      disabled={generating || !aiPrompt}
-                      className="px-8 py-3.5 bg-indigo-900 text-white font-semibold rounded-xl hover:bg-indigo-950 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[140px]"
-                    >
-                        {generating ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Sparkles className="w-4 h-4" /> Generate</>}
-                    </button>
+                <div className="relative p-8 md:p-10">
+                    <div className="flex flex-col md:flex-row items-start gap-8">
+                        <div className="p-4 bg-white/10 rounded-2xl shadow-inner backdrop-blur-md shrink-0 border border-white/10">
+                            <Wand2 className="w-8 h-8 text-[#5F1DD6]" />
+                        </div>
+                        <div className="flex-1 space-y-3">
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                AI Job Architect <span className="px-2 py-0.5 rounded text-[10px] bg-[#5F1DD6] font-bold tracking-widest uppercase">Beta</span>
+                            </h3>
+                            <p className="text-slate-300 text-sm leading-relaxed max-w-2xl">
+                               Skip the manual drafting. Describe the role briefly (e.g., <span className="text-white font-medium italic">"Senior React Developer, $140k, Remote, must know Next.js"</span>) and let our LLM generate a structured job description instantly.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                        <input 
+                           type="text" 
+                           placeholder="Describe the ideal candidate..." 
+                           className="flex-1 px-5 py-4 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:ring-2 focus:ring-[#5F1DD6] focus:border-transparent focus:bg-slate-900 outline-none shadow-inner transition-all"
+                           value={aiPrompt}
+                           onChange={(e) => setAiPrompt(e.target.value)}
+                           onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                        />
+                        <button 
+                          type="button"
+                          onClick={handleGenerate} 
+                          disabled={generating || !aiPrompt}
+                          className="px-8 py-4 bg-[#5F1DD6] text-white font-bold rounded-xl hover:bg-[#4a15a8] transition-all shadow-lg shadow-[#5F1DD6]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[160px]"
+                        >
+                            {generating ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Sparkles className="w-4 h-4" /> Generate JD</>}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {/* Main Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100 overflow-hidden">
+        {/* --- Main Form --- */}
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
           
-          <div className="p-8 sm:p-10 space-y-8">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-8 md:p-10 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  
                   {/* Job Title */}
-                  <div className="md:col-span-2 group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Job Title</label>
-                    <div className="relative transition-all duration-300 focus-within:-translate-y-1">
+                  <div className="md:col-span-2 space-y-1.5 group">
+                    <label className="block text-sm font-bold text-slate-700 ml-1">Job Title</label>
+                    <div className="relative transition-all duration-300 focus-within:-translate-y-0.5">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Briefcase className="h-5 w-5 text-gray-400 group-focus-within:text-violet-500 transition-colors" />
+                            <Briefcase className="h-5 w-5 text-slate-400 group-focus-within:text-[#5F1DD6] transition-colors" />
                         </div>
                         <input 
                           type="text" 
                           name="title" 
                           required
                           placeholder="e.g. Senior Backend Engineer"
-                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-violet-100 focus:border-violet-500 focus:bg-white outline-none transition-all font-medium"
+                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-[#5F1DD6]/10 focus:border-[#5F1DD6] focus:bg-white outline-none transition-all font-medium"
                           value={formData.title}
                           onChange={handleChange}
                         />
@@ -192,17 +203,17 @@ const CreateJob: React.FC = () => {
                   </div>
 
                   {/* Location */}
-                  <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Location</label>
-                    <div className="relative transition-all duration-300 focus-within:-translate-y-1">
+                  <div className="space-y-1.5 group">
+                    <label className="block text-sm font-bold text-slate-700 ml-1">Location</label>
+                    <div className="relative transition-all duration-300 focus-within:-translate-y-0.5">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-violet-500 transition-colors" />
+                            <MapPin className="h-5 w-5 text-slate-400 group-focus-within:text-[#5F1DD6] transition-colors" />
                         </div>
                         <input 
                           type="text" 
                           name="location" 
                           placeholder="e.g. Remote / New York"
-                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-violet-100 focus:border-violet-500 focus:bg-white outline-none transition-all"
+                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-[#5F1DD6]/10 focus:border-[#5F1DD6] focus:bg-white outline-none transition-all font-medium"
                           value={formData.location}
                           onChange={handleChange}
                         />
@@ -210,17 +221,17 @@ const CreateJob: React.FC = () => {
                   </div>
 
                   {/* Salary */}
-                  <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Salary Range</label>
-                    <div className="relative transition-all duration-300 focus-within:-translate-y-1">
+                  <div className="space-y-1.5 group">
+                    <label className="block text-sm font-bold text-slate-700 ml-1">Salary Range</label>
+                    <div className="relative transition-all duration-300 focus-within:-translate-y-0.5">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <DollarSign className="h-5 w-5 text-gray-400 group-focus-within:text-violet-500 transition-colors" />
+                            <DollarSign className="h-5 w-5 text-slate-400 group-focus-within:text-[#5F1DD6] transition-colors" />
                         </div>
                         <input 
                           type="text" 
                           name="salary" 
                           placeholder="e.g. $120k - $150k"
-                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-violet-100 focus:border-violet-500 focus:bg-white outline-none transition-all"
+                          className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-[#5F1DD6]/10 focus:border-[#5F1DD6] focus:bg-white outline-none transition-all font-medium"
                           value={formData.salary}
                           onChange={handleChange}
                         />
@@ -228,51 +239,54 @@ const CreateJob: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Job Description</label>
+                  <div className="md:col-span-2 space-y-1.5">
+                    <label className="block text-sm font-bold text-slate-700 ml-1">Job Description</label>
                     <textarea 
                       name="description" 
                       required
-                      rows={5}
+                      rows={6}
                       placeholder="Describe the role responsibilities, company culture, and perks..."
-                      className="w-full px-5 py-4 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-violet-100 focus:border-violet-500 focus:bg-white outline-none transition-all resize-y leading-relaxed"
+                      className="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-[#5F1DD6]/10 focus:border-[#5F1DD6] focus:bg-white outline-none transition-all resize-y leading-relaxed"
                       value={formData.description}
                       onChange={handleChange}
                     />
                   </div>
 
                   {/* Requirements */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Requirements <span className="text-gray-400 font-normal">(One per line)</span></label>
+                  <div className="md:col-span-2 space-y-1.5">
+                    <label className="block text-sm font-bold text-slate-700 ml-1">
+                        Requirements <span className="text-slate-400 font-normal ml-1">(One per line)</span>
+                    </label>
                     <div className="relative">
                         <textarea 
                           name="requirements" 
-                          rows={5}
+                          rows={6}
                           placeholder={'5+ years React experience\nKnowledge of TypeScript\nStrong communication skills'}
-                          className="w-full px-5 py-4 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-violet-100 focus:border-violet-500 focus:bg-white outline-none transition-all resize-y font-mono text-sm leading-relaxed"
+                          className="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-[#5F1DD6]/10 focus:border-[#5F1DD6] focus:bg-white outline-none transition-all resize-y font-mono text-sm leading-relaxed"
                           value={formData.requirements}
                           onChange={handleChange}
                         />
                          <div className="absolute top-3 right-3 pointer-events-none">
-                            <div className="px-2 py-1 bg-white border border-gray-100 rounded-md shadow-sm text-xs text-gray-400">Markdown supported</div>
+                            <div className="px-2 py-1 bg-white border border-slate-200 rounded-md shadow-sm text-[10px] font-bold text-slate-400 uppercase tracking-wide">Markdown Supported</div>
                          </div>
                     </div>
                   </div>
-             </div>
+              </div>
           </div>
 
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-4">
+          {/* Footer Actions */}
+          <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-4">
               <button 
                 type="button" 
                 onClick={() => navigate('/hr/jobs')}
-                className="px-6 py-2.5 rounded-xl text-gray-600 font-medium hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                className="px-6 py-3 rounded-xl text-slate-600 font-bold hover:text-slate-900 hover:bg-slate-200 transition-colors"
               >
                   Cancel
               </button>
               <button 
                 type="submit" 
                 disabled={loading}
-                className="px-8 py-3 rounded-xl bg-violet-600 text-white font-semibold hover:bg-violet-700 active:bg-violet-800 transition-all shadow-lg shadow-violet-200 hover:shadow-violet-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+                className="px-8 py-3 rounded-xl bg-[#5F1DD6] text-white font-bold hover:bg-[#4a15a8] active:translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 flex items-center gap-2"
               >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : isEditing ? <Save className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
                   {isEditing ? 'Save Changes' : 'Post Job'}

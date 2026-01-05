@@ -4,178 +4,183 @@ import {
   User, 
   Mail, 
   Shield, 
-  Building, 
+  Building2, 
   MapPin, 
   Phone, 
   Calendar, 
   Camera, 
   Edit2,
   CheckCircle2,
-  LogOut
+  LogOut,
+  Fingerprint
 } from 'lucide-react';
 
 const Profile: React.FC = () => {
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
     
     // Formatting helper
-    const roleName = user?.role ? user.role.replace('_', ' ') : 'HR Admin';
+    const roleName = user?.user_metadata?.role 
+        ? user.user_metadata.role.replace('_', ' ').toUpperCase() 
+        : (user?.app_metadata?.role || 'HR STAFF').replace('_', ' ').toUpperCase();
+        
     const initial = user?.email ? user.email.charAt(0).toUpperCase() : 'U';
+    const joinDate = new Date(user?.created_at || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
     return (
-        <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
-            <div className="max-w-5xl mx-auto space-y-8">
-                
-                {/* Header */}
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Account Settings</h1>
-                    <p className="text-gray-500 mt-2 text-lg">Manage your personal information and preferences.</p>
+        <div className="min-h-screen bg-slate-50 font-sans pb-12 animate-in fade-in duration-500">
+            
+            {/* --- Banner Section --- */}
+            <div className="h-64 bg-slate-900 relative overflow-hidden">
+                {/* Subtle Professional Pattern */}
+                <div className="absolute inset-0 opacity-10" 
+                     style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}>
                 </div>
+                
+                {/* Accent Line */}
+                <div className="absolute bottom-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-500"></div>
+                
+                <div className="absolute bottom-6 right-6 z-10">
+                    <button className="group flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg text-white text-sm font-semibold hover:bg-white/20 transition-all shadow-sm">
+                        <Camera className="w-4 h-4 group-hover:scale-105 transition-transform" />
+                        <span>Update Cover</span>
+                    </button>
+                </div>
+            </div>
 
-                {/* Main Profile Card */}
-                <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
+                
+                {/* --- Main Identity Card --- */}
+                <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
                     
-                    {/* Banner Section */}
-                    <div className="h-48 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 relative">
-                        <div className="absolute inset-0 bg-black/5"></div>
-                        <div className="absolute bottom-4 right-6">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-medium hover:bg-white/20 transition-all">
-                                <Camera className="w-4 h-4" />
-                                <span>Change Cover</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="px-8 pb-10 relative">
-                        {/* Avatar & Main Info Header */}
-                        <div className="flex flex-col md:flex-row items-start md:items-end -mt-16 mb-8 gap-6">
-                            <div className="relative group">
-                                <div className="w-32 h-32 rounded-3xl bg-white p-2 shadow-lg ring-1 ring-gray-100 rotate-3 group-hover:rotate-0 transition-all duration-300">
-                                    <div className="w-full h-full rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 flex items-center justify-center text-5xl font-extrabold text-indigo-600 border border-indigo-100">
+                    <div className="p-8 sm:p-10">
+                        <div className="flex flex-col md:flex-row items-start gap-8">
+                            
+                            {/* Avatar */}
+                            <div className="relative shrink-0">
+                                <div className="w-32 h-32 rounded-xl bg-white p-1 shadow-md ring-1 ring-slate-100">
+                                    <div className="w-full h-full rounded-lg bg-indigo-600 flex items-center justify-center text-5xl font-bold text-white shadow-inner">
                                         {initial}
                                     </div>
                                 </div>
-                                <button className="absolute bottom-2 -right-2 p-2 bg-indigo-600 text-white rounded-full shadow-lg border-4 border-white hover:bg-indigo-700 transition-colors">
-                                    <Camera className="w-4 h-4" />
-                                </button>
+                                <div className="absolute -bottom-2 -right-2">
+                                    <div className="p-2 bg-white rounded-lg shadow-md border border-slate-100 text-indigo-600">
+                                        <Shield className="w-4 h-4 fill-indigo-50" />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="flex-1 pt-2 md:pt-0">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            {/* Header Info */}
+                            <div className="flex-1 pt-2 md:pt-14 min-w-0">
+                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                                     <div>
-                                        <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                                            {user?.email?.split('@')[0] || 'User Profile'}
+                                        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                            {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
                                             <CheckCircle2 className="w-5 h-5 text-blue-500 fill-blue-50" />
-                                        </h2>
-                                        <p className="text-gray-500 font-medium">{user?.email}</p>
+                                        </h1>
+                                        <div className="flex flex-wrap items-center gap-4 mt-2 text-sm font-medium text-slate-500">
+                                            <span className="flex items-center gap-1.5 text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                                                <Building2 className="w-3.5 h-3.5" /> Prashne Corp
+                                            </span>
+                                            <span className="flex items-center gap-1.5">
+                                                <MapPin className="w-3.5 h-3.5" /> Bengaluru, India
+                                            </span>
+                                            <span className="flex items-center gap-1.5">
+                                                <Calendar className="w-3.5 h-3.5" /> Joined {joinDate}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-3">
-                                        <button className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-                                            <Edit2 className="w-4 h-4" />
-                                            Edit Profile
-                                        </button>
-                                    </div>
+                                    <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                                        <Edit2 className="w-4 h-4" />
+                                        <span>Edit Profile</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Details Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                        {/* --- Details Grid --- */}
+                        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
                             
-                            {/* Left Column: Role & Organization */}
-                            <div className="md:col-span-2 space-y-8">
+                            {/* Left Column: Personal Info */}
+                            <div className="lg:col-span-2 space-y-8">
                                 <div>
-                                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">
-                                        Professional Details
-                                    </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-indigo-200 transition-colors">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <div className="p-2 bg-white rounded-lg text-indigo-600 shadow-sm">
-                                                    <Shield className="w-5 h-5" />
-                                                </div>
-                                                <span className="text-sm font-medium text-gray-500">Role</span>
-                                            </div>
-                                            <p className="text-lg font-bold text-gray-900 capitalize pl-1">{roleName}</p>
-                                        </div>
-
-                                        <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-indigo-200 transition-colors">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <div className="p-2 bg-white rounded-lg text-indigo-600 shadow-sm">
-                                                    <Building className="w-5 h-5" />
-                                                </div>
-                                                <span className="text-sm font-medium text-gray-500">Organization</span>
-                                            </div>
-                                            <p className="text-lg font-bold text-gray-900 pl-1">Prashne Corp</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
                                         Contact Information
                                     </h3>
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                                            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                                                <Mail className="w-5 h-5" />
+                                    
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="group p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-colors">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <div className="p-1.5 bg-white rounded text-slate-400 group-hover:text-indigo-600 shadow-sm border border-slate-100 transition-colors">
+                                                    <Mail className="w-3.5 h-3.5" />
+                                                </div>
+                                                <span className="text-xs font-bold text-slate-500 uppercase">Email</span>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-medium text-gray-500">Email Address</p>
-                                                <p className="text-gray-900 font-medium">{user?.email}</p>
-                                            </div>
+                                            <p className="text-sm font-semibold text-slate-900 pl-1">{user?.email}</p>
                                         </div>
 
-                                        <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                                            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                                                <Phone className="w-5 h-5" />
+                                        <div className="group p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-colors">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <div className="p-1.5 bg-white rounded text-slate-400 group-hover:text-indigo-600 shadow-sm border border-slate-100 transition-colors">
+                                                    <Phone className="w-3.5 h-3.5" />
+                                                </div>
+                                                <span className="text-xs font-bold text-slate-500 uppercase">Phone</span>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-medium text-gray-500">Phone Number</p>
-                                                <p className="text-gray-900 font-medium">+91 98765 43210</p>
-                                            </div>
+                                            <p className="text-sm font-semibold text-slate-900 pl-1">+91 98765 43210</p>
                                         </div>
 
-                                        <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                                            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                                                <MapPin className="w-5 h-5" />
+                                        <div className="group p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-colors">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <div className="p-1.5 bg-white rounded text-slate-400 group-hover:text-indigo-600 shadow-sm border border-slate-100 transition-colors">
+                                                    <Shield className="w-3.5 h-3.5" />
+                                                </div>
+                                                <span className="text-xs font-bold text-slate-500 uppercase">Role</span>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-medium text-gray-500">Location</p>
-                                                <p className="text-gray-900 font-medium">Bengaluru, Karnataka, India</p>
+                                            <p className="text-sm font-semibold text-slate-900 pl-1">{roleName}</p>
+                                        </div>
+
+                                        <div className="group p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-colors">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <div className="p-1.5 bg-white rounded text-slate-400 group-hover:text-indigo-600 shadow-sm border border-slate-100 transition-colors">
+                                                    <Fingerprint className="w-3.5 h-3.5" />
+                                                </div>
+                                                <span className="text-xs font-bold text-slate-500 uppercase">User ID</span>
                                             </div>
+                                            <p className="text-sm font-semibold text-slate-900 pl-1 font-mono">{user?.id?.substring(0, 18)}...</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right Column: Sidebar / Stats */}
+                            {/* Right Column: Stats & Actions */}
                             <div className="space-y-6">
-                                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                                    <h3 className="font-bold text-gray-900 mb-4">Profile Status</h3>
-                                    <div className="relative pt-1">
+                                <div className="p-6 rounded-xl bg-slate-900 text-white shadow-lg relative overflow-hidden">
+                                    {/* Decoration */}
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500 opacity-20 rounded-full blur-xl -mr-8 -mt-8"></div>
+                                    
+                                    <h3 className="font-bold text-white mb-4 relative z-10 text-sm uppercase tracking-wide">Profile Strength</h3>
+                                    <div className="relative pt-1 z-10">
                                         <div className="flex mb-2 items-center justify-between">
-                                            <span className="text-xs font-semibold inline-block text-indigo-600">
-                                                80% Complete
+                                            <span className="text-xs font-bold inline-block text-indigo-600 bg-white px-2 py-0.5 rounded">
+                                                80%
                                             </span>
                                         </div>
-                                        <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
-                                            <div style={{ width: "80%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-600"></div>
+                                        <div className="overflow-hidden h-1.5 mb-4 text-xs flex rounded-full bg-slate-700">
+                                            <div style={{ width: "80%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
                                         </div>
-                                        <p className="text-xs text-gray-500">
-                                            Complete your profile to unlock all features.
+                                        <p className="text-xs text-slate-400 font-medium leading-relaxed">
+                                            Complete your profile by adding your LinkedIn URL to reach 100%.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                                    <h3 className="font-bold text-gray-900 mb-4">Account</h3>
-                                    <div className="flex items-center gap-3 text-sm text-gray-500 mb-6">
-                                        <Calendar className="w-4 h-4" />
-                                        <span>Joined December 2024</span>
-                                    </div>
-                                    <button className="w-full py-2.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+                                <div className="rounded-xl border border-slate-200 p-5 bg-white">
+                                    <h3 className="font-bold text-slate-900 mb-4 text-sm">Account Actions</h3>
+                                    <button 
+                                        onClick={signOut}
+                                        className="w-full py-2.5 text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 rounded-lg font-bold transition-all flex items-center justify-center gap-2 text-sm"
+                                    >
                                         <LogOut className="w-4 h-4" />
-                                        Sign Out
+                                        Sign Out Securely
                                     </button>
                                 </div>
                             </div>

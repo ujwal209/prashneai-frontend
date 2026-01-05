@@ -6,8 +6,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import SuperAdminLayout from './layouts/SuperAdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
-import CompaniesPage from './pages/admin/Companies';
-import UserProvisioning from './pages/admin/UserProvisioning';
+import CompanyList from './pages/admin/Companies';
+import CreateCompany from './pages/admin/CreateCompany';
+import UserList from './pages/admin/UserList';
+import CreateUser from './pages/admin/CreateUser';
 
 import HRLayout from './layouts/HRLayout'; 
 import HRDashboard from './pages/hr/Dashboard';
@@ -19,6 +21,10 @@ import HRAdminDashboard from './pages/hr/AdminDashboard';
 import SmartMatch from './pages/hr/SmartMatch';
 import MatchHistory from './pages/hr/MatchHistory';
 import Profile from './pages/hr/Profile';
+import LeaderboardPage from './pages/hr/Leaderboard';
+import InterviewsList from './pages/hr/InterviewsList';
+import ScheduleInterview from './pages/hr/ScheduleInterview';
+import InterviewRoom from './pages/InterviewRoom';
 
 function App() {
   return (
@@ -33,9 +39,15 @@ function App() {
               <SuperAdminLayout />
             </ProtectedRoute>
           }>
-             <Route index element={<AdminDashboard />} />
-             <Route path="companies" element={<CompaniesPage />} />
-             <Route path="users" element={<UserProvisioning />} />
+              <Route index element={<AdminDashboard />} />
+              
+              {/* Tenant Management */}
+              <Route path="companies" element={<CompanyList />} />
+              <Route path="companies/new" element={<CreateCompany />} />
+              
+              {/* User Management */}
+              <Route path="users" element={<UserList />} />
+              <Route path="users/new" element={<CreateUser />} />
           </Route>
 
           {/* HR Admin Routes */}
@@ -44,17 +56,24 @@ function App() {
               <HRLayout />
             </ProtectedRoute>
           }>
-             <Route path="dashboard" element={<HRDashboard />} />
-             <Route path="talent" element={<ResumesList />} />
-             <Route path="upload" element={<ResumeUpload />} />
-             <Route path="jobs" element={<JobsList />} />
-             <Route path="jobs/new" element={<CreateJob />} />
-             <Route path="jobs/edit/:id" element={<CreateJob />} />
-             <Route path="match" element={<SmartMatch />} />
-             <Route path="history" element={<MatchHistory />} />
-             <Route path="profile" element={<Profile />} />
-             <Route path="admin" element={<HRAdminDashboard />} />
+              <Route path="dashboard" element={<HRDashboard />} />
+              <Route path="leaderboard" element={<LeaderboardPage />} />
+              <Route path="talent" element={<ResumesList />} />
+              <Route path="upload" element={<ResumeUpload />} />
+              <Route path="jobs" element={<JobsList />} />
+              <Route path="jobs/new" element={<CreateJob />} />
+              <Route path="jobs/create" element={<CreateJob />} />
+              <Route path="jobs/edit/:id" element={<CreateJob />} />
+              <Route path="match" element={<SmartMatch />} />
+              <Route path="history" element={<MatchHistory />} />
+              <Route path="interviews" element={<InterviewsList />} />
+              <Route path="schedule" element={<ScheduleInterview />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="admin" element={<HRAdminDashboard />} />
           </Route>
+
+          {/* Public/Semi-Protected Interview Room */}
+          <Route path="/interview/:id" element={<InterviewRoom />} />
 
           {/* Default/Generic Dashboard Redirect */}
           <Route path="/dashboard" element={<Navigate to="/hr/dashboard" replace />} />

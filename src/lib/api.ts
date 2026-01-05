@@ -2,7 +2,7 @@ import axios from 'axios';
 import { supabase } from './supabase';
 
 const api = axios.create({
-  baseURL: 'https://prashne-backend.onrender.com/api/', // Pointing to /api prefix as per backend setup
+  baseURL:'http://127.0.0.1:8000/api/', // Pointing to /api prefix as per backend setup
 });
 
 api.interceptors.request.use(async (config) => {
