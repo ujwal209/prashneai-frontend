@@ -34,10 +34,7 @@
     "react-router-dom": "^7.11.0",
     "react-speech-recognition": "^4.0.1",
     "react-webcam": "^7.2.0",
-<<<<<<< HEAD
     "recharts": "^3.6.0",
-=======
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
     "regenerator-runtime": "^0.14.1",
     "styled-components": "^6.1.19",
     "tailwind-merge": "^3.4.0",

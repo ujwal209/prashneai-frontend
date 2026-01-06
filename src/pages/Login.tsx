@@ -2,19 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import api from '../lib/api';
-<<<<<<< HEAD
 import {
   AlertCircle,
   Loader2,
   Lock,
   Mail,
-=======
-import { 
-  AlertCircle, 
-  Loader2, 
-  Lock, 
-  Mail, 
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
   ArrowRight,
   ShieldCheck
 } from 'lucide-react';
@@ -32,7 +24,6 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-<<<<<<< HEAD
       const response = await api.post('/auth/login', {
         email,
         password
@@ -65,45 +56,11 @@ const Login: React.FC = () => {
       await supabase.auth.signOut();
     } finally {
       setLoading(false);
-=======
-        const response = await api.post('/auth/login', {
-            email,
-            password
-        });
-
-        const { access_token, refresh_token, user } = response.data;
-
-        const { error: sessionError } = await supabase.auth.setSession({
-            access_token,
-            refresh_token
-        });
-
-        if (sessionError) throw new Error("Failed to sync session: " + sessionError.message);
-
-        const role = user.role;
-        if (role === 'super_admin') navigate('/admin');
-        else if (role === 'hr_admin') navigate('/hr/admin');
-        else if (role === 'hr_user' || role === 'hr_staff') navigate('/hr/dashboard');
-        else navigate('/hr/dashboard');
-
-    } catch (err: any) {
-        console.error("Login Failed:", err);
-        const serverError = err.response?.data?.detail;
-        
-        if (serverError) setError(serverError);
-        else if (err.message) setError(err.message);
-        else setError("An unexpected error occurred.");
-        
-        await supabase.auth.signOut();
-    } finally {
-        setLoading(false);
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
     }
   };
 
   return (
     <div className="flex min-h-screen w-full font-sans antialiased bg-white selection:bg-indigo-100 selection:text-indigo-900">
-<<<<<<< HEAD
 
       {/* --- LEFT SIDE: Brand & Visuals (Enterprise Dark Mode) --- */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900 flex-col justify-between p-16 text-white border-r border-slate-800">
@@ -113,17 +70,6 @@ const Login: React.FC = () => {
           style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(to right, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
         </div>
 
-=======
-      
-      {/* --- LEFT SIDE: Brand & Visuals (Enterprise Dark Mode) --- */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900 flex-col justify-between p-16 text-white border-r border-slate-800">
-        
-        {/* Subtle Architectural Pattern */}
-        <div className="absolute inset-0 opacity-20" 
-             style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(to right, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-        </div>
-        
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
         {/* Deep Ambient Glows */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-900/40 rounded-full blur-[120px] -mr-40 -mt-40 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[100px] -ml-20 -mb-20 pointer-events-none" />
@@ -131,11 +77,7 @@ const Login: React.FC = () => {
         {/* Brand Header */}
         <div className="relative z-10 flex items-center gap-3">
           <div className="bg-white/10 backdrop-blur-sm border border-white/10 p-2 rounded-lg shadow-sm">
-<<<<<<< HEAD
             <img src="/logo.webp" alt="Prashne Logo" className="w-6 h-6 object-contain" />
-=======
-             <img src="/logo.webp" alt="Prashne Logo" className="w-6 h-6 object-contain" />
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
           </div>
           <span className="text-xl font-bold tracking-tight text-white">Prashne Corp.</span>
         </div>
@@ -143,11 +85,7 @@ const Login: React.FC = () => {
         {/* Main Visual Content */}
         <div className="relative z-10 max-w-lg space-y-8">
           <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white">
-<<<<<<< HEAD
             Recruitment <br />
-=======
-            Recruitment <br/>
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-blue-200">
               Intelligence Refined.
             </span>
@@ -155,7 +93,6 @@ const Login: React.FC = () => {
           <p className="text-slate-400 text-lg leading-relaxed font-medium">
             Secure, AI-driven candidate pipelines for the modern enterprise. Streamline your hiring with precision matching.
           </p>
-<<<<<<< HEAD
 
           {/* Trust Indicators */}
           <div className="flex items-center gap-6 pt-4 text-sm font-semibold text-slate-400">
@@ -167,19 +104,6 @@ const Login: React.FC = () => {
             <div>99.9% Uptime</div>
             <div className="w-1 h-1 rounded-full bg-slate-600" />
             <div>SSO Enabled</div>
-=======
-          
-          {/* Trust Indicators */}
-          <div className="flex items-center gap-6 pt-4 text-sm font-semibold text-slate-400">
-             <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                <span>SOC2 Compliant</span>
-             </div>
-             <div className="w-1 h-1 rounded-full bg-slate-600" />
-             <div>99.9% Uptime</div>
-             <div className="w-1 h-1 rounded-full bg-slate-600" />
-             <div>SSO Enabled</div>
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
           </div>
         </div>
 
@@ -192,11 +116,7 @@ const Login: React.FC = () => {
 
       {/* --- RIGHT SIDE: Login Form --- */}
       <div className="flex-1 flex flex-col justify-center items-center px-6 lg:px-24 bg-white relative">
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
         {/* Mobile Logo */}
         <div className="lg:hidden absolute top-8 left-8 flex items-center gap-3">
           <img src="/logo.webp" alt="Logo" className="w-8 h-8" />
@@ -204,11 +124,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="w-full max-w-[380px] space-y-8">
-<<<<<<< HEAD
 
-=======
-          
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
           {/* Header */}
           <div className="space-y-2 text-center lg:text-left">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -232,11 +148,7 @@ const Login: React.FC = () => {
 
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-5">
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
             {/* Email Field */}
             <div className="space-y-1.5">
               <label htmlFor="email" className="block text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">
@@ -314,11 +226,7 @@ const Login: React.FC = () => {
 
           {/* Footer Link */}
           <p className="text-center text-sm text-slate-500 font-medium">
-<<<<<<< HEAD
             Protected by Enterprise SSO. <br />
-=======
-            Protected by Enterprise SSO. <br/>
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
             <a href="#" className="font-bold text-slate-700 hover:text-indigo-600 hover:underline transition-colors">
               Contact IT Support
             </a> for access issues.
