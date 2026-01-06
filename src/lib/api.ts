@@ -2,11 +2,7 @@ import axios from 'axios';
 import { supabase } from './supabase';
 
 const api = axios.create({
-<<<<<<< HEAD
   baseURL: import.meta.env.VITE_API_BASE_URL,
-=======
-  baseURL:'http://127.0.0.1:8000/api/', // Pointing to /api prefix as per backend setup
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
 });
 
 api.interceptors.request.use(async (config) => {

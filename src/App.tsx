@@ -1,9 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// --- Auth & Public Pages ---
+import Login from './pages/Login';
+import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
+import Landing from './pages/Landing';
+
+// --- Super Admin Pages ---
 import SuperAdminLayout from './layouts/SuperAdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import CompanyList from './pages/admin/Companies';
@@ -11,17 +17,13 @@ import CreateCompany from './pages/admin/CreateCompany';
 import UserList from './pages/admin/UserList';
 import CreateUser from './pages/admin/CreateUser';
 
-<<<<<<< HEAD
-import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
+// --- Candidate Pages ---
 import CandidateLayout from './layouts/CandidateLayout';
 import CandidateDashboard from './pages/candidate/Dashboard';
 import PracticeArena from './pages/candidate/Practice';
 
+// --- HR Pages ---
 import HRLayout from './layouts/HRLayout';
-=======
-import HRLayout from './layouts/HRLayout'; 
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
 import HRDashboard from './pages/hr/Dashboard';
 import ResumesList from './pages/hr/ResumesList';
 import ResumeUpload from './pages/hr/ResumeUpload';
@@ -36,24 +38,19 @@ import InterviewsList from './pages/hr/InterviewsList';
 import ScheduleInterview from './pages/hr/ScheduleInterview';
 import InterviewRoom from './pages/InterviewRoom';
 
-<<<<<<< HEAD
-import Landing from './pages/Landing';
-
-=======
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-<<<<<<< HEAD
+          {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/verify" element={<VerifyEmail />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Candidate Routes */}
+          {/* Candidate Routes (Protected) */}
           <Route path="/candidate" element={
             <ProtectedRoute>
               <CandidateLayout />
@@ -64,17 +61,12 @@ function App() {
             <Route path="practice" element={<PracticeArena />} />
           </Route>
 
-=======
-          <Route path="/login" element={<Login />} />
-
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
-          {/* Super Admin Routes */}
+          {/* Super Admin Routes (Protected) */}
           <Route path="/admin" element={
             <ProtectedRoute>
               <SuperAdminLayout />
             </ProtectedRoute>
           }>
-<<<<<<< HEAD
             <Route index element={<AdminDashboard />} />
 
             {/* Tenant Management */}
@@ -84,26 +76,14 @@ function App() {
             {/* User Management */}
             <Route path="users" element={<UserList />} />
             <Route path="users/new" element={<CreateUser />} />
-=======
-              <Route index element={<AdminDashboard />} />
-              
-              {/* Tenant Management */}
-              <Route path="companies" element={<CompanyList />} />
-              <Route path="companies/new" element={<CreateCompany />} />
-              
-              {/* User Management */}
-              <Route path="users" element={<UserList />} />
-              <Route path="users/new" element={<CreateUser />} />
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
           </Route>
 
-          {/* HR Admin Routes */}
+          {/* HR Admin Routes (Protected) */}
           <Route path="/hr" element={
             <ProtectedRoute>
               <HRLayout />
             </ProtectedRoute>
           }>
-<<<<<<< HEAD
             <Route path="dashboard" element={<HRDashboard />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
             <Route path="talent" element={<ResumesList />} />
@@ -118,33 +98,16 @@ function App() {
             <Route path="schedule" element={<ScheduleInterview />} />
             <Route path="profile" element={<Profile />} />
             <Route path="admin" element={<HRAdminDashboard />} />
-=======
-              <Route path="dashboard" element={<HRDashboard />} />
-              <Route path="leaderboard" element={<LeaderboardPage />} />
-              <Route path="talent" element={<ResumesList />} />
-              <Route path="upload" element={<ResumeUpload />} />
-              <Route path="jobs" element={<JobsList />} />
-              <Route path="jobs/new" element={<CreateJob />} />
-              <Route path="jobs/create" element={<CreateJob />} />
-              <Route path="jobs/edit/:id" element={<CreateJob />} />
-              <Route path="match" element={<SmartMatch />} />
-              <Route path="history" element={<MatchHistory />} />
-              <Route path="interviews" element={<InterviewsList />} />
-              <Route path="schedule" element={<ScheduleInterview />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="admin" element={<HRAdminDashboard />} />
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
           </Route>
 
-          {/* Public/Semi-Protected Interview Room */}
+          {/* Interview Room (Separate Layout) */}
           <Route path="/interview/:id" element={<InterviewRoom />} />
 
-          {/* Default/Generic Dashboard Redirect */}
+          {/* Default/Generic Redirects */}
           <Route path="/dashboard" element={<Navigate to="/hr/dashboard" replace />} />
-<<<<<<< HEAD
-=======
-          <Route path="/" element={<Navigate to="/login" replace />} />
->>>>>>> c22e57f15658acb56e240bc10a7e750daacbf34f
+
+          {/* Catch all - 404 Redirect to Landing or Login */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
